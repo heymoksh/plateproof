@@ -1,0 +1,5 @@
+# Optional: only needed to train or run the experimental AI-image classifier.
+# CPU-only install (much smaller download):
+#   pip install -r requirements-ml.txt --index-url https://download.pytorch.org/whl/cpu
+torch>=2.2
+torchvision>=0.17

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlateProof: refund photo screening</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d2733'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='white' stroke-width='2.5'/%3E%3Cpath d='M11.5 16.5l3 3 6-6.5' fill='none' stroke='%23f2b441' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#1d2733"/>
+        <circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-width="2.5"/>
+        <path d="M11.5 16.5l3 3 6-6.5" fill="none" stroke="#f2b441" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1>PlateProof</h1>
+    </div>
+    <p>Checks the photos behind a food-delivery refund claim for evidence a reviewer should look at: editing, AI-generated images, reused photos and timestamps that don't fit the order. It never approves or rejects a refund.</p>
+  </header>
+
+  <main class="layout">
+    <form id="claim-form" class="panel intake" novalidate>
+      <h2>Refund claim</h2>
+
+      <div class="examples">
+        <p class="hint">Try an example:</p>
+        <div class="example-buttons" id="examples"></div>
+      </div>
+
+      <label class="drop" id="drop">
+        <input type="file" id="images" accept="image/*,.heic,.heif,.avif" multiple>
+        <span class="drop-title">Add photos</span>
+        <small>Choose or drop up to <span id="max-photos">6</span> photos, up to <span id="max-mb">25</span> MB each. JPEG, PNG, WebP, HEIC and more.</small>
+      </label>
+      <ul class="thumbs" id="thumbs" aria-label="Selected photos"></ul>
+
+      <details class="order" id="order-details">
+        <summary>Order details (optional)</summary>
+        <p class="hint">These let the checks compare the photos with the order.</p>
+        <div class="two">
+          <label>Order ID <input name="order_id" maxlength="100" placeholder="e.g. ORD-58213"></label>
+          <label>Customer ID <input name="customer_id" maxlength="100" placeholder="e.g. cust-2291"></label>
+        </div>
+        <label>Order placed <input name="order_placed_at" type="datetime-local"></label>
+        <label>Delivered <input name="delivered_at" type="datetime-local"></label>
+        <label>Restaurant <input name="restaurant" maxlength="200" placeholder="e.g. Shree Jain Rasoi"></label>
+        <label>Items ordered <input name="ordered_items" maxlength="1000" placeholder="e.g. Jain paneer butter masala, jeera rice"></label>
+        <label>Complaint
+          <select name="complaint_type">
+            <option value="unknown">Not specified</option>
+            <option value="missing_item">Missing item</option>
+            <option value="spilled_or_damaged">Spilled or damaged</option>
+            <option value="wrong_item">Wrong item</option>
+            <option value="quality_issue">Quality problem (stale, undercooked, cold)</option>
+            <option value="foreign_object">Foreign object (hair, insect, plastic)</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label>Where the photos came from
+          <select name="image_source">
+            <option value="unknown">Not known</option>
+            <option value="original_camera">Taken in the app or straight from the phone camera</option>
+            <option value="messaging_app">Sent through a messaging app</option>
+            <option value="social_media">Downloaded from social media</option>
+            <option value="email">Received by email</option>
+            <option value="screenshot">Screenshot</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label>Customer's description <textarea name="description" rows="3" maxlength="2000" placeholder="e.g. The Jain paneer arrived with onion in it"></textarea></label>
+      </details>
+
+      <fieldset class="options">
+        <label class="check"><input type="checkbox" name="save_to_history" checked><span>Remember these photos to spot reuse in later claims</span></label>
+        <label class="check" id="vision-option"><input type="checkbox" name="use_vision" id="use-vision"><span>Ask the vision model for observations <span id="vision-note" class="hint"></span></span></label>
+      </fieldset>
+
+      <button type="submit" id="submit">Check photos</button>
+      <p id="form-error" class="form-error" role="alert" hidden></p>
+    </form>
+
+    <section id="results" class="results" aria-live="polite">
+      <div class="empty">
+        <h2>No claim checked yet</h2>
+        <p>Add the claim's photos, or pick an example on the left, then select <em>Check photos</em>. You'll see each piece of evidence, how much it counted, and what could not be checked.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    PlateProof is a prototype for screening image evidence. A person should review every result before acting on a refund.
+    <a href="/docs">API documentation</a>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

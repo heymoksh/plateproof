@@ -1,0 +1,10 @@
+# Core application (no API keys or GPU required)
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+python-multipart>=0.0.18
+pillow>=11.3,<13
+pillow-heif>=0.18        # HEIC/HEIF (iPhone) support
+numpy>=1.26,<3
+python-dotenv>=1.0,<2
+google-genai>=2.0,<3     # optional Gemini observations (only used if GEMINI_API_KEY is set)
+huggingface_hub>=0.30    # only used by scripts/evaluate.py --fraudbench
